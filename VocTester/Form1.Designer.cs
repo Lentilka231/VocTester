@@ -42,6 +42,7 @@ namespace VocTester
             this.CzechTranslation = new System.Windows.Forms.TextBox();
             this.EnglishTranslation = new System.Windows.Forms.TextBox();
             this.buttonDeleteVoc = new System.Windows.Forms.Button();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAllVocabularies)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewTranslations)).BeginInit();
             this.panelTranslationPart.SuspendLayout();
@@ -175,6 +176,14 @@ namespace VocTester
             this.buttonDeleteVoc.Visible = false;
             this.buttonDeleteVoc.Click += new System.EventHandler(this.buttonDeleteVoc_Click);
             // 
+            // menuStrip1
+            // 
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(800, 24);
+            this.menuStrip1.TabIndex = 10;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -186,8 +195,11 @@ namespace VocTester
             this.Controls.Add(this.textBoxNewVoc);
             this.Controls.Add(this.dataGridViewAllVocabularies);
             this.Controls.Add(this.createVoc);
+            this.Controls.Add(this.menuStrip1);
+            this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
             this.Text = "Vocabulary tester by Lentilka231";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAllVocabularies)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewTranslations)).EndInit();
@@ -213,6 +225,7 @@ namespace VocTester
         private System.Windows.Forms.TextBox EnglishTranslation;
         private System.Windows.Forms.Button buttonDeleteVoc;
         private System.Windows.Forms.Button buttonRemoveRow;
+        private System.Windows.Forms.MenuStrip menuStrip1;
     }
 }
 

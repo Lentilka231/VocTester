@@ -8,44 +8,19 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
-using System.IO;
-using System.Text.Json;
 namespace VocTester
 {
     public partial class Form1 : Form
     {
-
+        private Form mainform = null;
         private MySqlConnection conn;
-        public Form1()
+        public Form1(Form f3,MySqlConnection conn)
         {
-            ConnecToDB();
+            mainform = f3;
             InitializeComponent();
+            this.conn = conn;
         }
-        public void ConnecToDB()
-        {
-
-            try
-            {
-                string connStr;
-                using (StreamReader r = new StreamReader("DBInfo.json"))
-                {
-                    string json = r.ReadToEnd();
-                    JsonDocument doc = JsonDocument.Parse(json);
-                    JsonElement root = doc.RootElement;
-                    connStr = $@"server={root.GetProperty("server")};
-                                 user={root.GetProperty("user")};
-                                 database={root.GetProperty("database")};
-                                 port={root.GetProperty("port")};
-                                 password={root.GetProperty("password")}";
-                }
-                conn = new MySqlConnection(connStr);
-                conn.Open();
-            }
-            catch
-            {
-                MessageBox.Show("Unable to join the Database!");
-            }
-}
+        
         private void Form1_Load(object sender, EventArgs e)
         {
             updateVocTable();
@@ -272,6 +247,11 @@ namespace VocTester
         private void dataGridViewTranslations_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             buttonRemoveRow.Visible = true;
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            mainform.Show();
         }
     }
     public class Vocabulary
