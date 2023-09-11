@@ -29,21 +29,23 @@ namespace VocTester
         /// </summary>
         private void InitializeComponent()
         {
-            this.button1 = new System.Windows.Forms.Button();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form3));
+            this.buttonGenerateTest = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.buttonDictionary = new System.Windows.Forms.Button();
             this.pictureBoxLogo = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLogo)).BeginInit();
             this.SuspendLayout();
             // 
-            // button1
+            // buttonGenerateTest
             // 
-            this.button1.Location = new System.Drawing.Point(51, 103);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(110, 37);
-            this.button1.TabIndex = 1;
-            this.button1.Text = "Generate test";
-            this.button1.UseVisualStyleBackColor = true;
+            this.buttonGenerateTest.Location = new System.Drawing.Point(51, 103);
+            this.buttonGenerateTest.Name = "buttonGenerateTest";
+            this.buttonGenerateTest.Size = new System.Drawing.Size(110, 37);
+            this.buttonGenerateTest.TabIndex = 1;
+            this.buttonGenerateTest.Text = "Generate test";
+            this.buttonGenerateTest.UseVisualStyleBackColor = true;
+            this.buttonGenerateTest.Click += new System.EventHandler(this.buttonGenerateTest_Click);
             // 
             // button2
             // 
@@ -66,7 +68,7 @@ namespace VocTester
             // 
             // pictureBoxLogo
             // 
-            this.pictureBoxLogo.Image = global::VocTester.Properties.Resources.Logo;
+            this.pictureBoxLogo.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxLogo.Image")));
             this.pictureBoxLogo.ImageLocation = "\"Logo.png\"";
             this.pictureBoxLogo.Location = new System.Drawing.Point(280, 44);
             this.pictureBoxLogo.Name = "pictureBoxLogo";
@@ -80,11 +82,11 @@ namespace VocTester
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 416);
             this.Controls.Add(this.pictureBoxLogo);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.buttonGenerateTest);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.buttonDictionary);
             this.Name = "Form3";
-            this.Text = "Form3";
+            this.Text = "Homemade Dictionary";
             this.Load += new System.EventHandler(this.Form3_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLogo)).EndInit();
             this.ResumeLayout(false);
@@ -93,7 +95,7 @@ namespace VocTester
 
         #endregion
 
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button buttonGenerateTest;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button buttonDictionary;
         private System.Windows.Forms.PictureBox pictureBoxLogo;

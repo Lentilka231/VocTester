@@ -198,7 +198,7 @@ namespace VocTester
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
-            this.Text = "Vocabulary tester by Lentilka231";
+            this.Text = "HMDictionary";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAllVocabularies)).EndInit();

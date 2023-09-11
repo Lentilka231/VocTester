@@ -56,5 +56,12 @@ namespace VocTester
         {
             pictureBoxLogo.ImageLocation = "Logo.png";
         }
+
+        private void buttonGenerateTest_Click(object sender, EventArgs e)
+        {
+            Form4 f4 = new Form4(this,conn);
+            f4.Show();
+            this.Hide();
+        }
     }
 }
