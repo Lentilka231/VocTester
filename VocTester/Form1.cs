@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
+using System.IO;
+using System.Text.Json;
 namespace VocTester
 {
     public partial class Form1 : Form
@@ -107,14 +109,53 @@ namespace VocTester
         {
             try
             {
-                MySqlCommand cmd = new MySqlCommand($"DELETE FROM `vocabularies` WHERE ID={vocID}", conn);
-                cmd.ExecuteNonQuery();
+                Tuple<MySqlConnection,bool> newConnection = openConnection();
+                if (newConnection.Item2)
+                {
+                    MySqlCommand cmd = new MySqlCommand($"SELECT englishid,czechid FROM junctiontable WHERE ParentVocabulary={vocID}", newConnection.Item1);
+                    MySqlDataReader rdr = cmd.ExecuteReader();
+                    while (rdr.Read())
+                    {
+                        deleteRowsFromDB(rdr["englishid"].ToString(), rdr["czechid"].ToString());
+                    }
+                    rdr.Close();
+                    cmd = new MySqlCommand($"DELETE FROM `vocabularies` WHERE ID={vocID}", conn);
+                    cmd.ExecuteNonQuery();
+                    newConnection.Item1.Close();
+                }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
             updateVocTable();
+            updateTranslationTable();
+        }
+        private Tuple<MySqlConnection,bool> openConnection()
+        {
+            try
+            {
+                string connStr;
+                using (StreamReader r = new StreamReader("DBInfo.json"))
+                {
+                    string json = r.ReadToEnd();
+                    JsonDocument doc = JsonDocument.Parse(json);
+                    JsonElement root = doc.RootElement;
+                    connStr = $@"server={root.GetProperty("server")};
+                                 user={root.GetProperty("user")};
+                                 database={root.GetProperty("database")};
+                                 port={root.GetProperty("port")};
+                                 password={root.GetProperty("password")}";
+                }
+                MySqlConnection conn2 = new MySqlConnection(connStr);
+                conn2.Open();
+                return Tuple.Create(conn2,true);
+            }
+            catch
+            {
+                MessageBox.Show("Unable to join the Database!");
+            }
+            return Tuple.Create(new MySqlConnection(), false);
         }
         private void createVoc_Click(object sender, EventArgs e)
         {
@@ -160,7 +201,7 @@ namespace VocTester
                     rdr.Close();
                     if (enID == "")
                     {
-                        cmd = new MySqlCommand($@"INSERT INTO `englishwords` (englishword,ParentVocabulary) VALUES ('{newEN}','{vocID}');",conn);
+                        cmd = new MySqlCommand($@"INSERT INTO `englishwords` (englishword) VALUES ('{newEN}');",conn);
                         cmd.ExecuteNonQuery();
                         cmd = new MySqlCommand($"SELECT EnglishID FROM englishwords WHERE englishword='{newEN}'", conn);
                         rdr = cmd.ExecuteReader();
@@ -183,7 +224,7 @@ namespace VocTester
                         rdr.Close();
                     }
 
-                    cmd = new MySqlCommand($"INSERT INTO `junctiontable` VALUES ('{enID}','{czID}')", conn);
+                    cmd = new MySqlCommand($"INSERT INTO `junctiontable` VALUES ('{enID}','{czID}','{vocID}')", conn);
                     cmd.ExecuteNonQuery();
                     CzechTranslation.Text = "";
                     EnglishTranslation.Text = "";
@@ -202,48 +243,70 @@ namespace VocTester
         private void buttonRemoveRow_Click(object sender, EventArgs e)
         {
             var removingRow = dataGridViewTranslations.SelectedRows[0];
-            
+            buttonRemoveRow.Visible = false;
+            try
+            {
+                MySqlCommand cmd = new MySqlCommand($@"
+                    SELECT englishwords.EnglishID,czechwords.CzechID FROM ((junctiontable 
+                    INNER JOIN englishwords ON junctiontable.englishid=englishwords.EnglishID)
+                    INNER JOIN czechwords ON  junctiontable.czechid=czechwords.CzechID)
+                    WHERE englishwords.englishword='{removingRow.Cells[1].Value.ToString()}' 
+                    AND czechwords.czechword = '{removingRow.Cells[2].Value.ToString()}'", conn);
+
+                MySqlDataReader rdr = cmd.ExecuteReader();
+                string enID="", czID="";
+                while (rdr.Read())
+                {
+                    enID = rdr["EnglishID"].ToString();
+                    czID = rdr["CzechID"].ToString();
+                }
+                rdr.Close();
+                deleteRowsFromDB(enID, czID);
+                updateTranslationTable();
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+        private void deleteRowsFromDB(string enID,string czID)
+        {
             MySqlCommand cmd = new MySqlCommand($@"
                 DELETE junctiontable FROM ((junctiontable 
                 INNER JOIN englishwords ON junctiontable.englishid=englishwords.EnglishID)
                 INNER JOIN czechwords ON junctiontable.czechid=czechwords.CzechID)
-                WHERE englishwords.englishword='{removingRow.Cells[1].Value}' 
-                AND czechwords.czechword='{removingRow.Cells[2].Value}';
+                WHERE englishwords.EnglishID='{enID}' 
+                AND czechwords.CzechID='{czID}'
+                AND junctiontable.ParentVocabulary='{dataGridViewAllVocabularies.SelectedRows[0].Cells[0].Value.ToString()}';
                 ", conn);
             cmd.ExecuteNonQuery();
 
             cmd = new MySqlCommand($@"SELECT junctiontable.englishid FROM (junctiontable 
                 INNER JOIN englishwords ON junctiontable.englishid=englishwords.EnglishID) 
-                WHERE englishwords.englishword='{removingRow.Cells[1].Value}'", conn);
+                WHERE englishwords.EnglishID='{enID}'", conn);
             MySqlDataReader rdr = cmd.ExecuteReader();
 
             if (!rdr.HasRows)
             {
                 rdr.Close();
-
-                cmd = new MySqlCommand($"DELETE FROM `englishwords` WHERE englishword ='{removingRow.Cells[1].Value}';", conn);
+                cmd = new MySqlCommand($"DELETE FROM `englishwords` WHERE EnglishID ='{enID}';", conn);
                 cmd.ExecuteNonQuery();
             }
             rdr.Close();
 
             cmd = new MySqlCommand($@"SELECT junctiontable.czechid FROM (junctiontable 
                     INNER JOIN czechwords ON junctiontable.czechid=czechwords.CzechID) 
-                    WHERE czechwords.czechword='{removingRow.Cells[2].Value}'", conn);
+                    WHERE czechwords.CzechID='{czID}'", conn);
             rdr = cmd.ExecuteReader();
             if (!rdr.HasRows)
             {
                 rdr.Close();
-                cmd = new MySqlCommand($"DELETE FROM `czechwords` WHERE czechword ='{removingRow.Cells[2].Value}';", conn);
+                cmd = new MySqlCommand($"DELETE FROM `czechwords` WHERE CzechID ='{czID}';", conn);
                 cmd.ExecuteNonQuery();
             }
             rdr.Close();
-
-
-            updateTranslationTable();
-
-            buttonRemoveRow.Visible = false;
         }
-
         private void dataGridViewTranslations_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             buttonRemoveRow.Visible = true;
@@ -251,6 +314,12 @@ namespace VocTester
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
+            mainform.Show();
+        }
+
+        private void buttonBack_Click(object sender, EventArgs e)
+        {
+            this.Close();
             mainform.Show();
         }
     }

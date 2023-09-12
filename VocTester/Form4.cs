@@ -36,11 +36,12 @@ namespace VocTester
 
         private void buttonGenerate_Click(object sender, EventArgs e)
         {
-            int numberOfWordsFromOneVoc = Decimal.ToInt32(numericUpDownNumberOfWords.Value);
+            int numberOfWordsFromOneVoc = int.Parse(comboBoxNumberOfWords.SelectedItem.ToString());
             int numberOfVoc = checkedListBoxVoc.CheckedItems.Count;
             MySqlCommand cmd;
             MySqlDataReader rdr;
-            for(int x = 0;x<numberOfVoc;x++)
+            richTextBoxTest.Text = "";
+            for (int x = 0;x<numberOfVoc;x++)
             {
                 if (radioButtonEN.Checked)
                 {
@@ -48,13 +49,14 @@ namespace VocTester
                 }
                 else
                 {
-                    cmd = new MySqlCommand("SELECT czechword AS word FROM czechwords ORDER BY RAND() LIMIT {numberOfWordsFromOneVoc}", conn);
+                    cmd = new MySqlCommand($"SELECT czechword AS word FROM czechwords ORDER BY RAND() LIMIT {numberOfWordsFromOneVoc}", conn);
                 }
                 rdr = cmd.ExecuteReader();
                 while (rdr.Read())
                 {
-                    richTextBoxTest.Text += $"\n{rdr["word"]}";
+                    richTextBoxTest.Text += $"{rdr["word"]}\n";
                 }
+                rdr.Close();
             }
         }
 

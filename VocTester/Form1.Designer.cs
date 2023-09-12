@@ -43,6 +43,7 @@ namespace VocTester
             this.EnglishTranslation = new System.Windows.Forms.TextBox();
             this.buttonDeleteVoc = new System.Windows.Forms.Button();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.buttonBack = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAllVocabularies)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewTranslations)).BeginInit();
             this.panelTranslationPart.SuspendLayout();
@@ -184,11 +185,22 @@ namespace VocTester
             this.menuStrip1.TabIndex = 10;
             this.menuStrip1.Text = "menuStrip1";
             // 
+            // buttonBack
+            // 
+            this.buttonBack.Location = new System.Drawing.Point(12, 413);
+            this.buttonBack.Name = "buttonBack";
+            this.buttonBack.Size = new System.Drawing.Size(56, 25);
+            this.buttonBack.TabIndex = 11;
+            this.buttonBack.Text = "back";
+            this.buttonBack.UseVisualStyleBackColor = true;
+            this.buttonBack.Click += new System.EventHandler(this.buttonBack_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.buttonBack);
             this.Controls.Add(this.buttonDeleteVoc);
             this.Controls.Add(this.panelTranslationPart);
             this.Controls.Add(this.LabelNewVocabulary);
@@ -226,6 +238,7 @@ namespace VocTester
         private System.Windows.Forms.Button buttonDeleteVoc;
         private System.Windows.Forms.Button buttonRemoveRow;
         private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.Button buttonBack;
     }
 }
 
