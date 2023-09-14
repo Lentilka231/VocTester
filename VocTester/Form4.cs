@@ -29,11 +29,6 @@ namespace VocTester
             rdr.Close();
         }
 
-        private void Form4_Load(object sender, EventArgs e)
-        {
-
-        }
-
         private void buttonGenerate_Click(object sender, EventArgs e)
         {
             int numberOfWordsFromOneVoc = int.Parse(comboBoxNumberOfWords.SelectedItem.ToString());
@@ -63,6 +58,11 @@ namespace VocTester
         private void Form4_FormClosing(object sender, FormClosingEventArgs e)
         {
             mainForm.Show();
+        }
+
+        private void buttonBack_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }

@@ -16,6 +16,7 @@ namespace VocTester
     {
         private Form mainform = null;
         private MySqlConnection conn;
+        private bool editMode = false;
         public Form1(Form f3,MySqlConnection conn)
         {
             mainform = f3;
@@ -76,7 +77,6 @@ namespace VocTester
         }
         private void updateTranslationTable()
         {
-            List<Translation> listOfTranslations = new List<Translation>();
             try
             {
                 MySqlCommand cmd = new MySqlCommand($@"
@@ -87,15 +87,49 @@ namespace VocTester
                     WHERE ParentVocabulary={dataGridViewAllVocabularies.SelectedRows[0].Cells[0].Value}", conn);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 int counter = 1;
-                while (rdr.Read())
+
+                if (editMode)
                 {
-                    listOfTranslations.Add(new Translation()
+                    List<Translation> editListOfTranslations = new List<Translation>();
+
+                    while (rdr.Read())
                     {
-                        ID = counter,
-                        English = rdr["englishword"].ToString(),
-                        Czech = rdr["czechword"].ToString()
-                    });
-                    counter++;
+                        editListOfTranslations.Add(new Translation()
+                        {
+                            ID = counter,
+                            English = rdr["englishword"].ToString(),
+                            Czech = rdr["czechword"].ToString()
+                        });
+                        counter++;
+                    }
+                    dataGridViewTranslations.DataSource = editListOfTranslations;
+                }
+                else
+                {
+                    Dictionary<string, Translation> studyListOfTranslations = new Dictionary<string, Translation>();
+                    while (rdr.Read())
+                    {
+                        var match = studyListOfTranslations.ContainsKey(rdr["englishword"].ToString());
+                        if (match)
+                        {
+                            studyListOfTranslations[rdr["englishword"].ToString()].Czech +=", "+ rdr["czechword"].ToString();
+                        }
+                        else
+                        {
+                            studyListOfTranslations.Add(
+                            rdr["englishword"].ToString(),
+                            new Translation()
+                                {
+                                    ID = counter,
+                                    English = rdr["englishword"].ToString(),
+                                    Czech = rdr["czechword"].ToString()
+                                }
+                            );
+                            counter++;
+                        }
+                    }
+
+                    dataGridViewTranslations.DataSource = studyListOfTranslations.Values.ToList();
                 }
                 rdr.Close();
             }
@@ -103,7 +137,6 @@ namespace VocTester
             {
                 MessageBox.Show("Some error occured:" + ex.Message + " - " + ex.Source);
             }
-            dataGridViewTranslations.DataSource = listOfTranslations;
         }
         public void deleteVocabularyFromDB(string vocID)
         {
@@ -185,11 +218,11 @@ namespace VocTester
 
                 try
                 {
-                    MySqlCommand cmd = new MySqlCommand($"SELECT EnglishID FROM englishwords WHERE englishword='{newEN}'",conn);
+                    MySqlCommand cmd = new MySqlCommand($"SELECT EnglishID FROM englishwords WHERE englishword='{newEN}'", conn);
                     MySqlDataReader rdr = cmd.ExecuteReader();
                     while (rdr.Read())
                     {
-                        enID=rdr["EnglishID"].ToString();
+                        enID = rdr["EnglishID"].ToString();
                     }
                     rdr.Close();
                     cmd = new MySqlCommand($"SELECT CzechID FROM czechwords WHERE czechword='{newCZ}'", conn);
@@ -201,7 +234,7 @@ namespace VocTester
                     rdr.Close();
                     if (enID == "")
                     {
-                        cmd = new MySqlCommand($@"INSERT INTO `englishwords` (englishword) VALUES ('{newEN}');",conn);
+                        cmd = new MySqlCommand($@"INSERT INTO `englishwords` (englishword) VALUES ('{newEN}');", conn);
                         cmd.ExecuteNonQuery();
                         cmd = new MySqlCommand($"SELECT EnglishID FROM englishwords WHERE englishword='{newEN}'", conn);
                         rdr = cmd.ExecuteReader();
@@ -213,7 +246,7 @@ namespace VocTester
                     }
                     if (czID == "")
                     {
-                        cmd = new MySqlCommand($@"INSERT INTO `czechwords` (czechword) VALUES ('{newCZ}')",conn);
+                        cmd = new MySqlCommand($@"INSERT INTO `czechwords` (czechword) VALUES ('{newCZ}')", conn);
                         cmd.ExecuteNonQuery();
                         cmd = new MySqlCommand($"SELECT CzechID FROM czechwords WHERE czechword = '{newCZ}'", conn);
                         rdr = cmd.ExecuteReader();
@@ -224,11 +257,28 @@ namespace VocTester
                         rdr.Close();
                     }
 
-                    cmd = new MySqlCommand($"INSERT INTO `junctiontable` VALUES ('{enID}','{czID}','{vocID}')", conn);
-                    cmd.ExecuteNonQuery();
-                    CzechTranslation.Text = "";
-                    EnglishTranslation.Text = "";
-                    updateTranslationTable();
+                    cmd = new MySqlCommand($"SELECT * FROM `junctiontable` WHERE englishid='{enID}' AND czechid='{czID}'",conn);
+                    rdr = cmd.ExecuteReader();
+
+                    string noRecordInDB ="";
+                    while (rdr.Read())
+                    {
+                        noRecordInDB = rdr["ParentVocabulary"].ToString();
+                    }
+                    rdr.Close();
+                    if (noRecordInDB == "")
+                    {
+                        cmd = new MySqlCommand($"INSERT INTO `junctiontable` VALUES ('{enID}','{czID}','{vocID}')", conn);
+                        cmd.ExecuteNonQuery();
+                        CzechTranslation.Text = "";
+                        EnglishTranslation.Text = "";
+                        updateTranslationTable();
+                    }
+                    else
+                    {
+                        MessageBox.Show("This translation is already notted.");
+                    }
+                    
                 }
                 catch (Exception ex)
                 {
@@ -277,8 +327,7 @@ namespace VocTester
                 INNER JOIN englishwords ON junctiontable.englishid=englishwords.EnglishID)
                 INNER JOIN czechwords ON junctiontable.czechid=czechwords.CzechID)
                 WHERE englishwords.EnglishID='{enID}' 
-                AND czechwords.CzechID='{czID}'
-                AND junctiontable.ParentVocabulary='{dataGridViewAllVocabularies.SelectedRows[0].Cells[0].Value.ToString()}';
+                AND czechwords.CzechID='{czID}';
                 ", conn);
             cmd.ExecuteNonQuery();
 
@@ -309,7 +358,7 @@ namespace VocTester
         }
         private void dataGridViewTranslations_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            buttonRemoveRow.Visible = true;
+            buttonRemoveRow.Visible = (editMode)?true:false;
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
@@ -321,6 +370,21 @@ namespace VocTester
         {
             this.Close();
             mainform.Show();
+        }
+        private void buttonSwitchMode_Click(object sender, EventArgs e)
+        {
+            if (editMode)
+            {
+                buttonSwitchMode.Text ="Study mode";
+                buttonRemoveRow.Visible = false;
+            }
+            else
+            {
+                buttonSwitchMode.Text = "Edit mode";
+                buttonRemoveRow.Visible = true;
+            }
+            editMode = !editMode;
+            updateTranslationTable();
         }
     }
     public class Vocabulary

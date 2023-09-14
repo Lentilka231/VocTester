@@ -44,6 +44,7 @@ namespace VocTester
             this.buttonDeleteVoc = new System.Windows.Forms.Button();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.buttonBack = new System.Windows.Forms.Button();
+            this.buttonSwitchMode = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAllVocabularies)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewTranslations)).BeginInit();
             this.panelTranslationPart.SuspendLayout();
@@ -98,6 +99,7 @@ namespace VocTester
             // 
             // panelTranslationPart
             // 
+            this.panelTranslationPart.Controls.Add(this.buttonSwitchMode);
             this.panelTranslationPart.Controls.Add(this.buttonRemoveRow);
             this.panelTranslationPart.Controls.Add(this.SubmitTranslation);
             this.panelTranslationPart.Controls.Add(this.label2);
@@ -114,9 +116,9 @@ namespace VocTester
             // buttonRemoveRow
             // 
             this.buttonRemoveRow.BackColor = System.Drawing.Color.Tomato;
-            this.buttonRemoveRow.Location = new System.Drawing.Point(255, 333);
+            this.buttonRemoveRow.Location = new System.Drawing.Point(253, 340);
             this.buttonRemoveRow.Name = "buttonRemoveRow";
-            this.buttonRemoveRow.Size = new System.Drawing.Size(76, 36);
+            this.buttonRemoveRow.Size = new System.Drawing.Size(76, 22);
             this.buttonRemoveRow.TabIndex = 13;
             this.buttonRemoveRow.Text = "Remove row";
             this.buttonRemoveRow.UseVisualStyleBackColor = false;
@@ -195,6 +197,16 @@ namespace VocTester
             this.buttonBack.UseVisualStyleBackColor = true;
             this.buttonBack.Click += new System.EventHandler(this.buttonBack_Click);
             // 
+            // buttonSwitchMode
+            // 
+            this.buttonSwitchMode.Location = new System.Drawing.Point(254, 308);
+            this.buttonSwitchMode.Name = "buttonSwitchMode";
+            this.buttonSwitchMode.Size = new System.Drawing.Size(75, 23);
+            this.buttonSwitchMode.TabIndex = 12;
+            this.buttonSwitchMode.Text = "Study mode";
+            this.buttonSwitchMode.UseVisualStyleBackColor = true;
+            this.buttonSwitchMode.Click += new System.EventHandler(this.buttonSwitchMode_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -239,6 +251,7 @@ namespace VocTester
         private System.Windows.Forms.Button buttonRemoveRow;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.Button buttonBack;
+        private System.Windows.Forms.Button buttonSwitchMode;
     }
 }
 

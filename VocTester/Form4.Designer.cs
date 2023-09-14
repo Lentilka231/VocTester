@@ -38,6 +38,7 @@ namespace VocTester
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.comboBoxNumberOfWords = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
+            this.buttonBack = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -140,11 +141,22 @@ namespace VocTester
             this.label2.TabIndex = 71;
             this.label2.Text = "Number of words per vocabulary";
             // 
+            // buttonBack
+            // 
+            this.buttonBack.Location = new System.Drawing.Point(12, 413);
+            this.buttonBack.Name = "buttonBack";
+            this.buttonBack.Size = new System.Drawing.Size(56, 25);
+            this.buttonBack.TabIndex = 72;
+            this.buttonBack.Text = "back";
+            this.buttonBack.UseVisualStyleBackColor = true;
+            this.buttonBack.Click += new System.EventHandler(this.buttonBack_Click);
+            // 
             // Form4
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.buttonBack);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.comboBoxNumberOfWords);
             this.Controls.Add(this.groupBox1);
@@ -155,7 +167,6 @@ namespace VocTester
             this.Name = "Form4";
             this.Text = "HMGenerator";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form4_FormClosing);
-            this.Load += new System.EventHandler(this.Form4_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
@@ -174,5 +185,6 @@ namespace VocTester
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.ComboBox comboBoxNumberOfWords;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Button buttonBack;
     }
 }
