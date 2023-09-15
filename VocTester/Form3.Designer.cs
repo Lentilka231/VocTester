@@ -31,7 +31,7 @@ namespace VocTester
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form3));
             this.buttonGenerateTest = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
+            this.buttonHangman = new System.Windows.Forms.Button();
             this.buttonDictionary = new System.Windows.Forms.Button();
             this.pictureBoxLogo = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLogo)).BeginInit();
@@ -47,14 +47,15 @@ namespace VocTester
             this.buttonGenerateTest.UseVisualStyleBackColor = true;
             this.buttonGenerateTest.Click += new System.EventHandler(this.buttonGenerateTest_Click);
             // 
-            // button2
+            // buttonHangman
             // 
-            this.button2.Location = new System.Drawing.Point(51, 174);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(110, 37);
-            this.button2.TabIndex = 2;
-            this.button2.Text = "Hangman";
-            this.button2.UseVisualStyleBackColor = true;
+            this.buttonHangman.Location = new System.Drawing.Point(51, 174);
+            this.buttonHangman.Name = "buttonHangman";
+            this.buttonHangman.Size = new System.Drawing.Size(110, 37);
+            this.buttonHangman.TabIndex = 2;
+            this.buttonHangman.Text = "Hangman";
+            this.buttonHangman.UseVisualStyleBackColor = true;
+            this.buttonHangman.Click += new System.EventHandler(this.buttonHangman_Click);
             // 
             // buttonDictionary
             // 
@@ -83,7 +84,7 @@ namespace VocTester
             this.ClientSize = new System.Drawing.Size(800, 416);
             this.Controls.Add(this.pictureBoxLogo);
             this.Controls.Add(this.buttonGenerateTest);
-            this.Controls.Add(this.button2);
+            this.Controls.Add(this.buttonHangman);
             this.Controls.Add(this.buttonDictionary);
             this.Name = "Form3";
             this.Text = "Homemade Dictionary";
@@ -96,7 +97,7 @@ namespace VocTester
         #endregion
 
         private System.Windows.Forms.Button buttonGenerateTest;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button buttonHangman;
         private System.Windows.Forms.Button buttonDictionary;
         private System.Windows.Forms.PictureBox pictureBoxLogo;
     }

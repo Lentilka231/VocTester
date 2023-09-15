@@ -1,7 +1,7 @@
 ﻿
 namespace VocTester
 {
-    partial class HMHangman
+    partial class Form5
     {
         /// <summary>
         /// Required designer variable.
@@ -94,7 +94,7 @@ namespace VocTester
             this.panelChooseVoc.Controls.Add(this.label2);
             this.panelChooseVoc.Controls.Add(this.comboBoxVocChoose);
             this.panelChooseVoc.Controls.Add(this.buttonChoose);
-            this.panelChooseVoc.Location = new System.Drawing.Point(392, 209);
+            this.panelChooseVoc.Location = new System.Drawing.Point(41, 12);
             this.panelChooseVoc.Name = "panelChooseVoc";
             this.panelChooseVoc.Size = new System.Drawing.Size(731, 395);
             this.panelChooseVoc.TabIndex = 5;
@@ -123,26 +123,28 @@ namespace VocTester
             // 
             this.labelInCzech.AutoSize = true;
             this.labelInCzech.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F);
-            this.labelInCzech.Location = new System.Drawing.Point(79, 359);
+            this.labelInCzech.Location = new System.Drawing.Point(79, 354);
             this.labelInCzech.Name = "labelInCzech";
             this.labelInCzech.Size = new System.Drawing.Size(77, 20);
             this.labelInCzech.TabIndex = 13;
             this.labelInCzech.Text = "In czech:";
             // 
-            // HMHangman
+            // Form5
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.labelInCzech);
             this.Controls.Add(this.buttonBack);
             this.Controls.Add(this.panelChooseVoc);
             this.Controls.Add(this.labelLives);
             this.Controls.Add(this.labelGussedLetters);
             this.Controls.Add(this.labelGuessWord);
-            this.Name = "HMHangman";
+            this.Controls.Add(this.labelInCzech);
+            this.Name = "Form5";
             this.Text = "HMHangman";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.HMHangman_FormClosing);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form5_FormClosing);
+            this.Load += new System.EventHandler(this.Form5_Load);
+            this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Form5_KeyPress);
             this.panelChooseVoc.ResumeLayout(false);
             this.panelChooseVoc.PerformLayout();
             this.ResumeLayout(false);

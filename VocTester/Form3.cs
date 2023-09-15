@@ -63,5 +63,12 @@ namespace VocTester
             f4.Show();
             this.Hide();
         }
+
+        private void buttonHangman_Click(object sender, EventArgs e)
+        {
+            Form5 f5 = new Form5(this, conn);
+            f5.Show();
+            this.Hide();
+        }
     }
 }
