@@ -35,6 +35,7 @@ namespace VocTester
             this.dataGridViewTranslations = new System.Windows.Forms.DataGridView();
             this.LabelNewVocabulary = new System.Windows.Forms.Label();
             this.panelTranslationPart = new System.Windows.Forms.Panel();
+            this.buttonSwitchMode = new System.Windows.Forms.Button();
             this.buttonRemoveRow = new System.Windows.Forms.Button();
             this.SubmitTranslation = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
@@ -44,7 +45,6 @@ namespace VocTester
             this.buttonDeleteVoc = new System.Windows.Forms.Button();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.buttonBack = new System.Windows.Forms.Button();
-            this.buttonSwitchMode = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAllVocabularies)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewTranslations)).BeginInit();
             this.panelTranslationPart.SuspendLayout();
@@ -112,6 +112,16 @@ namespace VocTester
             this.panelTranslationPart.Size = new System.Drawing.Size(355, 426);
             this.panelTranslationPart.TabIndex = 9;
             this.panelTranslationPart.Visible = false;
+            // 
+            // buttonSwitchMode
+            // 
+            this.buttonSwitchMode.Location = new System.Drawing.Point(254, 308);
+            this.buttonSwitchMode.Name = "buttonSwitchMode";
+            this.buttonSwitchMode.Size = new System.Drawing.Size(75, 23);
+            this.buttonSwitchMode.TabIndex = 13;
+            this.buttonSwitchMode.Text = "Study mode";
+            this.buttonSwitchMode.UseVisualStyleBackColor = true;
+            this.buttonSwitchMode.Click += new System.EventHandler(this.buttonSwitchMode_Click);
             // 
             // buttonRemoveRow
             // 
@@ -196,16 +206,6 @@ namespace VocTester
             this.buttonBack.Text = "back";
             this.buttonBack.UseVisualStyleBackColor = true;
             this.buttonBack.Click += new System.EventHandler(this.buttonBack_Click);
-            // 
-            // buttonSwitchMode
-            // 
-            this.buttonSwitchMode.Location = new System.Drawing.Point(254, 308);
-            this.buttonSwitchMode.Name = "buttonSwitchMode";
-            this.buttonSwitchMode.Size = new System.Drawing.Size(75, 23);
-            this.buttonSwitchMode.TabIndex = 12;
-            this.buttonSwitchMode.Text = "Study mode";
-            this.buttonSwitchMode.UseVisualStyleBackColor = true;
-            this.buttonSwitchMode.Click += new System.EventHandler(this.buttonSwitchMode_Click);
             // 
             // Form1
             // 

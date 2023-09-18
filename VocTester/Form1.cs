@@ -73,12 +73,16 @@ namespace VocTester
             {
                 MessageBox.Show(ex.ToString());
             }
-            dataGridViewAllVocabularies.DataSource = listOfCreatedVocabularies; 
+            if (listOfCreatedVocabularies.Count !=0)
+            {
+                dataGridViewAllVocabularies.DataSource = listOfCreatedVocabularies; 
+            }
         }
         private void updateTranslationTable()
         {
             try
             {
+
                 MySqlCommand cmd = new MySqlCommand($@"
                     SELECT englishwords.englishword, czechwords.czechword 
                     FROM ((junctiontable 

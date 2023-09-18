@@ -30,7 +30,7 @@ namespace VocTester
         private void buttonChoose_Click(object sender, EventArgs e)
         {
             panelChooseVoc.Visible = false;
-            MySqlCommand cmd = new MySqlCommand($@"SELECT englishid FROM junctiontable ORDER BY RAND() LIMIT 1",conn);
+            MySqlCommand cmd = new MySqlCommand($@"SELECT englishid FROM junctiontable WHERE ParentVocabulary='{((ComboBoxItem)comboBoxVocChoose.SelectedItem).HiddenValue}' ORDER BY RAND() LIMIT 1",conn);
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
@@ -38,7 +38,7 @@ namespace VocTester
                     SELECT englishword,czechword FROM ((junctiontable
                     INNER JOIN englishwords ON englishwords.EnglishID=junctiontable.englishid)
                     INNER JOIN czechwords ON czechwords.CzechID = junctiontable.czechid)
-                    WHERE junctiontable.englishid={rdr["englishid"]}",conn) ;
+                    WHERE junctiontable.englishid='{rdr["englishid"]}'",conn) ;
             }
             rdr.Close();
             rdr = cmd.ExecuteReader();
@@ -69,11 +69,11 @@ namespace VocTester
 
         private void Form5_Load(object sender, EventArgs e)
         {
-            MySqlCommand cmd = new MySqlCommand("SELECT Name FROM vocabularies", this.conn);
+            MySqlCommand cmd = new MySqlCommand("SELECT Name,ID FROM vocabularies", this.conn);
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
-                comboBoxVocChoose.Items.Add(rdr["Name"].ToString());
+                comboBoxVocChoose.Items.Add(new ComboBoxItem(rdr["Name"].ToString(),rdr["ID"].ToString()));
             }
             rdr.Close();
         }
@@ -95,7 +95,11 @@ namespace VocTester
                         {
                             guessWordInList[i] = letter.ToString();
                             labelGuessWord.Text = String.Join(" ", this.guessWordInList);
-                            break;
+                            if (!this.guessWordInList.Contains("_"))
+                            {
+                                MessageBox.Show("Congratulation!!!\nThe hidden word was "+ this.guessWord+".");
+                                panelChooseVoc.Visible = true;
+                            }
                         }
                     }
                 }
@@ -113,5 +117,27 @@ namespace VocTester
             }
         }
 
+    }
+    class ComboBoxItem
+    {
+        string displayValue;
+        string hiddenValue;
+
+        public ComboBoxItem(string d, string h)
+        {
+            displayValue = d;
+            hiddenValue = h;
+        }
+        public string HiddenValue
+        {
+            get
+            {
+                return hiddenValue;
+            }
+        }
+        public override string ToString()
+        {
+            return displayValue;
+        }
     }
 }

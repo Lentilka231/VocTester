@@ -94,7 +94,7 @@ namespace VocTester
             this.panelChooseVoc.Controls.Add(this.label2);
             this.panelChooseVoc.Controls.Add(this.comboBoxVocChoose);
             this.panelChooseVoc.Controls.Add(this.buttonChoose);
-            this.panelChooseVoc.Location = new System.Drawing.Point(41, 12);
+            this.panelChooseVoc.Location = new System.Drawing.Point(26, 12);
             this.panelChooseVoc.Name = "panelChooseVoc";
             this.panelChooseVoc.Size = new System.Drawing.Size(731, 395);
             this.panelChooseVoc.TabIndex = 5;
