@@ -31,27 +31,44 @@ namespace VocTester
 
         private void buttonGenerate_Click(object sender, EventArgs e)
         {
-            int numberOfWordsFromOneVoc = int.Parse(comboBoxNumberOfWords.SelectedItem.ToString());
             int numberOfVoc = checkedListBoxVoc.CheckedItems.Count;
-            MySqlCommand cmd;
-            MySqlDataReader rdr;
-            richTextBoxTest.Text = "";
-            for (int x = 0;x<numberOfVoc;x++)
+            if (numberOfVoc>0 && (radioButtonEN.Checked || radioButtonCZ.Checked) && comboBoxNumberOfWords.SelectedIndex.ToString()!="-1") 
             {
-                if (radioButtonEN.Checked)
+
+
+                int numberOfWordsFromOneVoc = int.Parse(comboBoxNumberOfWords.SelectedItem.ToString());
+                MySqlCommand cmd;
+                MySqlDataReader rdr;
+                richTextBoxTest.Text = "";
+                for (int x = 0;x<numberOfVoc;x++)
                 {
-                    cmd = new MySqlCommand($"SELECT englishword AS word FROM englishwords ORDER BY RAND() LIMIT {numberOfWordsFromOneVoc}",conn);
+                    if (radioButtonEN.Checked)
+                    {
+                    
+                        cmd = new MySqlCommand($@"SELECT englishword AS word FROM (junctiontable INNER JOIN
+                                            englishwords ON junctiontable.englishid=englishwords.EnglishID)
+                                            WHERE ParentVocabulary=(SELECT ID FROM vocabularies WHERE vocabularies.Name='{checkedListBoxVoc.CheckedItems[x]}')
+                                            GROUP BY englishword ORDER BY RAND() LIMIT {numberOfWordsFromOneVoc}", conn);
+                        
+                    }
+                    else
+                    {
+                        cmd = new MySqlCommand($@"SELECT englishword AS word FROM (junctiontable INNER JOIN
+                                            czechwords ON junctiontable.czechid=czechwords.CzechID)
+                                            WHERE ParentVocabulary=(SELECT ID FROM vocabularies WHERE vocabularies.Name='{checkedListBoxVoc.CheckedItems[x]}')
+                                            GROUP BY czechwords ORDER BY RAND() LIMIT {numberOfWordsFromOneVoc}", conn);
+                    }
+                    rdr = cmd.ExecuteReader();
+                    while (rdr.Read())
+                    {
+                        richTextBoxTest.Text += $"{rdr["word"]}\n";
+                    }
+                    rdr.Close();
                 }
-                else
-                {
-                    cmd = new MySqlCommand($"SELECT czechword AS word FROM czechwords ORDER BY RAND() LIMIT {numberOfWordsFromOneVoc}", conn);
-                }
-                rdr = cmd.ExecuteReader();
-                while (rdr.Read())
-                {
-                    richTextBoxTest.Text += $"{rdr["word"]}\n";
-                }
-                rdr.Close();
+            }
+            else
+            {
+                MessageBox.Show("Fill all inputs");
             }
         }
 

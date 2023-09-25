@@ -18,6 +18,7 @@ namespace VocTester
         private string guessWord;
         private List<string> guessWordInList;
         private List<string> wrongGuesses;
+        private Dictionary<string,List<string>> wordsFromVOC = new Dictionary<string, List<string>>();
         public Form5(Form f, MySqlConnection conn)
         {
             this.KeyPreview = true;
@@ -30,33 +31,46 @@ namespace VocTester
         private void buttonChoose_Click(object sender, EventArgs e)
         {
             panelChooseVoc.Visible = false;
-            MySqlCommand cmd = new MySqlCommand($@"SELECT englishid FROM junctiontable WHERE ParentVocabulary='{((ComboBoxItem)comboBoxVocChoose.SelectedItem).HiddenValue}' ORDER BY RAND() LIMIT 1",conn);
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            while (rdr.Read())
-            {
-                cmd = new MySqlCommand($@"
-                    SELECT englishword,czechword FROM ((junctiontable
-                    INNER JOIN englishwords ON englishwords.EnglishID=junctiontable.englishid)
-                    INNER JOIN czechwords ON czechwords.CzechID = junctiontable.czechid)
-                    WHERE junctiontable.englishid='{rdr["englishid"]}'",conn) ;
-            }
-            rdr.Close();
-            rdr = cmd.ExecuteReader();
-            List<string> czechVersions = new List<string>();
-            while (rdr.Read())
-            {
-                this.guessWord = rdr["englishword"].ToString();
-                czechVersions.Add(rdr["czechword"].ToString());
-            }
-            rdr.Close();
+            getWordsFromDB();
+            guessWord = chooseWord();
+
             this.lives = 3;
-            labelInCzech.Text ="In czech: "+ String.Join(", ",czechVersions);
+            labelGussedLetters.Text = "Guessed letters:";
+            labelInCzech.Text = "In czech: " + String.Join(", ",wordsFromVOC[guessWord]);
             this.guessWordInList = Enumerable.Repeat("_", this.guessWord.Length).ToList();
             labelGuessWord.Text =String.Join(" ", this.guessWordInList);
             labelLives.Text = "Lives left: "+this.lives;
             wrongGuesses = new List<string>();
+
         }
-        
+        private void getWordsFromDB()
+        {
+            wordsFromVOC.Clear();
+            MySqlCommand cmd = new MySqlCommand($@" 
+                    SELECT englishword,czechword FROM ((junctiontable
+                    INNER JOIN englishwords ON englishwords.EnglishID=junctiontable.englishid)
+                    INNER JOIN czechwords ON czechwords.CzechID = junctiontable.czechid)
+                    WHERE junctiontable.ParentVocabulary='{((ComboBoxItem)comboBoxVocChoose.SelectedItem).HiddenValue}'",conn);
+            MySqlDataReader rdr = cmd.ExecuteReader();
+
+            while (rdr.Read())
+            {
+                if (!(wordsFromVOC.ContainsKey(rdr["englishword"].ToString())))
+                {
+                    wordsFromVOC[rdr["englishword"].ToString()] = new List<string> {rdr["czechword"].ToString()};
+                }
+                else
+                {
+                    wordsFromVOC[rdr["englishword"].ToString()].Add(rdr["czechword"].ToString());
+                }
+            }
+            rdr.Close();
+        }
+        private string chooseWord()
+        {
+            Random rng = new Random();
+            return wordsFromVOC.ElementAt(rng.Next(0,wordsFromVOC.Count)).Key;
+        }
         private void buttonBack_Click(object sender, EventArgs e)
         {
             this.Close();
@@ -84,7 +98,7 @@ namespace VocTester
             {
                 return;
             }
-            if (char.IsLetter(e.KeyChar) && !wrongGuesses.Contains(e.KeyChar.ToString().ToUpper()))
+            if ((char.IsLetter(e.KeyChar)||e.KeyChar=='-') && !wrongGuesses.Contains(e.KeyChar.ToString().ToUpper()))
             {
                 char letter = e.KeyChar;
                 if (guessWord.ToLower().Contains(letter))
@@ -97,8 +111,10 @@ namespace VocTester
                             labelGuessWord.Text = String.Join(" ", this.guessWordInList);
                             if (!this.guessWordInList.Contains("_"))
                             {
+                                buttonNewWordFromSameVOC.Visible = true;
+                                buttonChangeVOC.Visible = true;
                                 MessageBox.Show("Congratulation!!!\nThe hidden word was "+ this.guessWord+".");
-                                panelChooseVoc.Visible = true;
+                                wordsFromVOC.Remove(guessWord);
                             }
                         }
                     }
@@ -110,13 +126,45 @@ namespace VocTester
                     if (this.lives==0)
                     {
                         labelGuessWord.Text = String.Join(" ", this.guessWord.ToList());
+                        MessageBox.Show("You failed, the word was " + this.guessWord + ".");
                     }
                     wrongGuesses.Add(letter.ToString().ToUpper());
                     labelGussedLetters.Text = "Guessed letters: "+String.Join(", ",wrongGuesses);
+                    buttonNewWordFromSameVOC.Visible = true;
+                    buttonChangeVOC.Visible = true;
                 }
             }
         }
 
+        private void buttonNewWordFromSameVOC_Click(object sender, EventArgs e)
+        {
+            if (wordsFromVOC.Count == 0)
+            {
+                MessageBox.Show("This is end of the vocabulary. You have to choose another.");
+                panelChooseVoc.Visible = true;
+                buttonNewWordFromSameVOC.Visible = false;
+                buttonChangeVOC.Visible = false;
+                return;
+            }
+            guessWord = chooseWord();
+
+            this.lives = 3;
+            labelGussedLetters.Text = "Guessed letters:";
+            labelInCzech.Text = "In czech: " + String.Join(", ", wordsFromVOC[guessWord]);
+            this.guessWordInList = Enumerable.Repeat("_", this.guessWord.Length).ToList();
+            labelGuessWord.Text = String.Join(" ", this.guessWordInList);
+            labelLives.Text = "Lives left: " + this.lives;
+            wrongGuesses = new List<string>();
+            buttonNewWordFromSameVOC.Visible = false;
+            buttonChangeVOC.Visible = false;
+        }
+
+        private void buttonChangeVOC_Click(object sender, EventArgs e)
+        {
+            panelChooseVoc.Visible = true;
+            buttonNewWordFromSameVOC.Visible = false;
+            buttonChangeVOC.Visible = false;
+        }
     }
     class ComboBoxItem
     {
@@ -140,4 +188,5 @@ namespace VocTester
             return displayValue;
         }
     }
+   
 }

@@ -38,6 +38,8 @@ namespace VocTester
             this.label2 = new System.Windows.Forms.Label();
             this.buttonBack = new System.Windows.Forms.Button();
             this.labelInCzech = new System.Windows.Forms.Label();
+            this.buttonNewWordFromSameVOC = new System.Windows.Forms.Button();
+            this.buttonChangeVOC = new System.Windows.Forms.Button();
             this.panelChooseVoc.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -94,10 +96,10 @@ namespace VocTester
             this.panelChooseVoc.Controls.Add(this.label2);
             this.panelChooseVoc.Controls.Add(this.comboBoxVocChoose);
             this.panelChooseVoc.Controls.Add(this.buttonChoose);
-            this.panelChooseVoc.Location = new System.Drawing.Point(26, 12);
+            this.panelChooseVoc.Location = new System.Drawing.Point(37, 12);
             this.panelChooseVoc.Name = "panelChooseVoc";
             this.panelChooseVoc.Size = new System.Drawing.Size(731, 395);
-            this.panelChooseVoc.TabIndex = 5;
+            this.panelChooseVoc.TabIndex = 20;
             // 
             // label2
             // 
@@ -129,6 +131,28 @@ namespace VocTester
             this.labelInCzech.TabIndex = 13;
             this.labelInCzech.Text = "In czech:";
             // 
+            // buttonNewWordFromSameVOC
+            // 
+            this.buttonNewWordFromSameVOC.Location = new System.Drawing.Point(479, 325);
+            this.buttonNewWordFromSameVOC.Name = "buttonNewWordFromSameVOC";
+            this.buttonNewWordFromSameVOC.Size = new System.Drawing.Size(100, 40);
+            this.buttonNewWordFromSameVOC.TabIndex = 14;
+            this.buttonNewWordFromSameVOC.Text = "New world from same vocabulary";
+            this.buttonNewWordFromSameVOC.UseVisualStyleBackColor = true;
+            this.buttonNewWordFromSameVOC.Visible = false;
+            this.buttonNewWordFromSameVOC.Click += new System.EventHandler(this.buttonNewWordFromSameVOC_Click);
+            // 
+            // buttonChangeVOC
+            // 
+            this.buttonChangeVOC.Location = new System.Drawing.Point(598, 325);
+            this.buttonChangeVOC.Name = "buttonChangeVOC";
+            this.buttonChangeVOC.Size = new System.Drawing.Size(100, 40);
+            this.buttonChangeVOC.TabIndex = 15;
+            this.buttonChangeVOC.Text = "Change vocabulary";
+            this.buttonChangeVOC.UseVisualStyleBackColor = true;
+            this.buttonChangeVOC.Visible = false;
+            this.buttonChangeVOC.Click += new System.EventHandler(this.buttonChangeVOC_Click);
+            // 
             // Form5
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -140,6 +164,8 @@ namespace VocTester
             this.Controls.Add(this.labelGussedLetters);
             this.Controls.Add(this.labelGuessWord);
             this.Controls.Add(this.labelInCzech);
+            this.Controls.Add(this.buttonNewWordFromSameVOC);
+            this.Controls.Add(this.buttonChangeVOC);
             this.Name = "Form5";
             this.Text = "HMHangman";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form5_FormClosing);
@@ -163,5 +189,7 @@ namespace VocTester
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button buttonBack;
         private System.Windows.Forms.Label labelInCzech;
+        private System.Windows.Forms.Button buttonNewWordFromSameVOC;
+        private System.Windows.Forms.Button buttonChangeVOC;
     }
 }

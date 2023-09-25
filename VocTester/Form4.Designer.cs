@@ -122,11 +122,7 @@ namespace VocTester
             "12",
             "16",
             "20",
-            "24",
-            "28",
-            "32",
-            "36",
-            "40"});
+            "24"});
             this.comboBoxNumberOfWords.Location = new System.Drawing.Point(151, 287);
             this.comboBoxNumberOfWords.Name = "comboBoxNumberOfWords";
             this.comboBoxNumberOfWords.Size = new System.Drawing.Size(121, 21);
